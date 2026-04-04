@@ -1,0 +1,7 @@
+{
+    "editor.inlineSuggest.suppressSuggestions": true,
+    "terminal.integrated.suggest.insertTrailingSpace": true,
+    "terminal.integrated.suggest.providers": {
+        "lsp": true
+    }
+}
