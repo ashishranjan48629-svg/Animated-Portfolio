@@ -1,10 +1,10 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useState } from "react";
 import ParticlesBackground from "../components/ParticlesBackground";
 import { motion } from "framer-motion";
-import { useState } from "react";
 import { FaXTwitter, FaLinkedin, FaGithub } from "react-icons/fa6";
 import avator from "../assets/avator.png";
 
+const roles = ["Web Developer", "Software Developer"];
 
 const Socials = [
   { icon: FaXTwitter, label: "X", link: "https://x.com/Ashish5028" },
@@ -41,31 +41,30 @@ const GlowVariant = {
 };
 
 export default function Home() {
-  const roles = useMemo(() => ["Web Developer", "Software Developer"]);
+  void motion;
   const [index, setIndex] = useState(0);
   const [subIndex, setSubIndex] = useState(0);
   const [deleting, setDeleting] = useState(false);
   useEffect(() => {
     const current = roles[index];
+    let timeout;
 
-    const timeout = setTimeout(
-      () => {
-        if (!deleting && subIndex < current.length) {
-          setSubIndex((prev) => prev + 1);
-        } else if (!deleting && subIndex === current.length) {
-          setTimeout(() => setDeleting(true), 1200);
-        } else if (deleting && subIndex > 0) {
-          setSubIndex((prev) => prev - 1);
-        } else if (deleting && subIndex === 0) {
+    if (!deleting && subIndex === current.length) {
+      timeout = setTimeout(() => setDeleting(true), 1200);
+    } else if (deleting && subIndex === 0) {
+      timeout = setTimeout(() => {
           setDeleting(false);
           setIndex((prev) => (prev + 1) % roles.length);
-        }
-      },
-      deleting ? 40 : 80,
-    );
+        }, 80);
+    } else {
+      timeout = setTimeout(
+        () => setSubIndex((prev) => prev + (deleting ? -1 : 1)),
+        deleting ? 40 : 80,
+      );
+    }
 
     return () => clearTimeout(timeout);
-  }, [subIndex, index, deleting, roles]);
+  }, [subIndex, index, deleting]);
 
   return (
     <section
@@ -79,9 +78,9 @@ export default function Home() {
         <div
           className="
             absolute -top-60 -left-60
-            w-/[80vw] sm:w-[50vw] md:w-[40vw]
+            w-[80vw] sm:w-[50vw] md:w-[40vw]
             h-[80vw] sm:h-[50vw] md:h-[40vw]
-            max-w-/[800px] max-h-/[800px]
+            max-w-[800px] max-h-[800px]
             rounded-full
             bg-linear-to-r from-[#1e3a8a] via-[#3b82f6] to-[#8b5cf6]
             opacity-20
@@ -96,7 +95,7 @@ export default function Home() {
             absolute -bottom-60 -right-60
             w-[70vw] sm:w-[50vw] md:w-[40vw]
             h-[70vw] sm:h-[50vw] md:h-[40vw]
-            max-w-/[600px] max-h-/[600px]
+            max-w-[600px] max-h-[600px]
             rounded-full
             bg-linear-to-r from-[#6366f1] via-[#3b82f6] to-[#0ea5e9]
             opacity-15
@@ -109,7 +108,7 @@ export default function Home() {
 
       <div className="relative z-10 h-full w-full max-w-7xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-2">
         <div className="flex flex-col justify-center h-full text-center lg:text-left relative">
-          <div className="w-full lg:pr-24 mx:auto max-w-/[48rem]">
+          <div className="w-full lg:pr-24 mx-auto max-w-[48rem]">
             <motion.div
               className="mb-3 text-xl md:text-3xl lg:text-4xl font-semibold text-white tracking-wide min-h-[1.6em]"
               initial={{ opacity: 0, y: 12 }}
@@ -118,7 +117,7 @@ export default function Home() {
             >
               <span>{roles[index].substring(0, subIndex)}</span>
               <span
-                className="inline-block w-/[2px] ml-1 bg-white animate-pulse align-middle"
+                className="inline-block w-[2px] ml-1 bg-white animate-pulse align-middle"
                 style={{ height: "2rem" }}
               ></span>
             </motion.div>
@@ -161,13 +160,6 @@ export default function Home() {
               >
                 View My Work
               </a>
-              <a
-                href="path/to/your/resume.pdf"
-                download
-                className="px-6 py-3 rounded-full text-lg font-medium text-black bg-white hover:bg-gray-200 shadow-lg hover:scale-105 transition-all"
-              >
-                My Resume
-              </a>
             </motion.div>
 
             <motion.div
@@ -201,7 +193,7 @@ export default function Home() {
 
         <div className="relative hidden lg:block">
           <div
-          className="absolute top-1/2-translate-y-1/2 pointer-events-none"
+          className="absolute top-1/2 -translate-y-1/2 pointer-events-none"
           style={{
             right: "10px",
             width: "min(22vw,410px)",

@@ -1,18 +1,31 @@
- @import "tailwindcss";
- 
+@import "tailwindcss";
 
- body{
-   font-family: 'Poppins', sans-serif;
- }
-
- h1,h2{
-    font-family: 'Roboto', sans-serif;
- }
-
- @layer utilities {
- .gradient {
-  background: linear-gradient(-45deg, #0f0f0f, #1a1a1a, #141e30);
+body {
+  font-family: "Poppins", sans-serif;
 }
 
+h1,
+h2 {
+  font-family: "Roboto", sans-serif;
+}
 
-} 
+@layer utilities {
+  .gradient {
+    background: linear-gradient(-45deg, #0f0f0f, #1a1a1a, #141e30);
+  }
+
+  .animate-marquee {
+    display: flex;
+    animation: marquee 25s linear infinite;
+  }
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}

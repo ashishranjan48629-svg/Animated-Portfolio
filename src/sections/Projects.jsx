@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import ParticleBackground from '../components/ParticlesBackground';
+import { useState } from "react";
+import ParticleBackground from "../components/ParticlesBackground";
 
 const Projects = () => {
   const [activeTab, setActiveTab] = useState("All");
@@ -9,9 +9,9 @@ const Projects = () => {
       icon: "🤖",
       title: "Neroxa AI",
       desc: "An intelligent AI SaaS platform with powerful automation, smart workflows, and seamless integrations built for scale.",
-      tags: ["React","Node.js", "Tailwind CSS", "OpenAI"],
-      demo: "#",
-      github: "#",
+      tags: ["React", "Node.js", "Tailwind CSS", "OpenAI"],
+      demo: null,
+      github: null,
       featured: true,
       category: "Full Stack",
     },
@@ -20,8 +20,8 @@ const Projects = () => {
       title: "Animated Portfolio",
       desc: "A personal developer portfolio with smooth animations, starry background, dark theme, and fully responsive layout built from scratch.",
       tags: ["React", "Tailwind CSS", "Framer Motion"],
-      demo: "#",
-      github: "#",
+      demo: null,
+      github: null,
       featured: true,
       category: "Frontend",
     },
@@ -42,13 +42,22 @@ const Projects = () => {
       demo: "https://ashishranjan48629-svg.github.io/Amazon-clone/",
       github: "https://github.com/ashishranjan48629-svg/Amazon-clone",
       category: "Frontend",
-    },  
+    },
+    {
+      icon: "🛍️",
+      title: "CraveCart",
+      desc: "A modern e-commerce store with product browsing, cart management, and checkout flow, designed to be fast, responsive, and easy to use.",
+      tags: ["React", "Node.js", "MongoDB", "Express"],
+      demo: null,
+      github: null,
+      category: "Full Stack",
+    },
   ];
 
   const tabs = ["All", "Frontend", "Full Stack"];
 
   const filtered = cards.filter(
-    (p) => activeTab === "All" || p.category === activeTab
+    (project) => activeTab === "All" || project.category === activeTab,
   );
 
   const Glow = [
@@ -75,9 +84,10 @@ const Projects = () => {
       </div>
 
       <div className="relative z-10 mx-auto max-w-5xl px-6 pt-28 pb-20">
-
         {/* Header */}
-        <p className="text-xs tracking-widest uppercase text-blue-400 mb-3">My Work</p>
+        <p className="mb-3 text-xs uppercase tracking-widest text-blue-400">
+          My Work
+        </p>
         <h2 className="text-4xl md:text-5xl font-bold mb-4">
           Featured{" "}
           <span className="bg-gradient-to-r from-blue-400 to-violet-400 bg-clip-text text-transparent">
@@ -107,9 +117,9 @@ const Projects = () => {
 
         {/* Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 auto-rows-fr gap-6">
-          {filtered.map((project, i) => (
+          {filtered.map((project) => (
             <div
-              key={i}
+              key={project.title}
               className="relative h-full flex flex-col bg-white/[0.03] border border-white/[0.08] rounded-2xl p-7 hover:border-blue-500/25 hover:bg-blue-500/[0.04] hover:-translate-y-1.5 transition-all duration-300"
             >
               {project.featured && (
@@ -122,12 +132,19 @@ const Projects = () => {
                 {project.icon}
               </div>
 
-              <h3 className="text-lg font-semibold text-gray-100 mb-2">{project.title}</h3>
-              <p className="text-sm text-gray-500 leading-relaxed mb-5 flex-grow">{project.desc}</p>
+              <h3 className="mb-2 text-lg font-semibold text-gray-100">
+                {project.title}
+              </h3>
+              <p className="mb-5 flex-grow text-sm leading-relaxed text-gray-500">
+                {project.desc}
+              </p>
 
               <div className="flex flex-wrap gap-2 mb-6 flex-shrink-0">
                 {project.tags.map((tag) => (
-                  <span key={tag} className="text-[11px] font-medium px-2.5 py-1 rounded bg-blue-500/10 border border-blue-500/15 text-blue-300">
+                  <span
+                    key={tag}
+                    className="rounded border border-blue-500/15 bg-blue-500/10 px-2.5 py-1 text-[11px] font-medium text-blue-300"
+                  >
                     {tag}
                   </span>
                 ))}
@@ -135,13 +152,19 @@ const Projects = () => {
 
               <div className="flex items-center justify-between border-t border-white/[0.06] pt-5 flex-shrink-0">
                 <div className="flex gap-4">
-                  {project.demo && (
-                    <a href={project.demo} className="text-sm text-gray-400 hover:text-blue-400 transition-colors">
+                  {project.demo && project.demo !== "#" && (
+                    <a
+                      href={project.demo}
+                      className="text-sm text-gray-400 transition-colors hover:text-blue-400"
+                    >
                       🔗 Live Demo
                     </a>
                   )}
-                  {project.github && (
-                    <a href={project.github} className="text-sm text-gray-400 hover:text-blue-400 transition-colors">
+                  {project.github && project.github !== "#" && (
+                    <a
+                      href={project.github}
+                      className="text-sm text-gray-400 transition-colors hover:text-blue-400"
+                    >
                       &lt;/&gt; GitHub
                     </a>
                   )}
@@ -150,7 +173,6 @@ const Projects = () => {
             </div>
           ))}
         </div>
-
       </div>
     </section>
   );

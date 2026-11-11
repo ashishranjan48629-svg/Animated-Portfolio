@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { motion } from "framer-motion";
+import { useState } from "react";
+import { motion as Motion } from "framer-motion";
 import ParticleBackground from "../components/ParticlesBackground";
 import emailjs from "@emailjs/browser";
 import astra from "../assets/astra.png";
@@ -102,7 +102,7 @@ const Contact = () => {
 
       <div className="relative z-10 w-full max-w-7xl flex flex-col md:flex-row items-center justify-between gap-10">
         {/* LEFT IMAGE */}
-        <motion.img
+        <Motion.img
           src={astra}
           alt="Contact"
           className="w-80 md:w-[520px] object-contain"

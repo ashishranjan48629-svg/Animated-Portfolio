@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
 class Particle {
   constructor(canvas, ctx, colors) {
@@ -78,9 +78,6 @@ export default function ParticlesBackground() {
   }, []);
 
   return (
-    <canvas
-      ref={canvasRef}
-      className="fixed top-0 left-0 w-full h-full"
-    ></canvas>
+    <canvas ref={canvasRef} className="fixed top-0 left-0 h-full w-full" />
   );
 }

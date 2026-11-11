@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { AnimatePresence, motion as Motion } from "framer-motion";
 import { FiX } from "react-icons/fi";
 
 export default function OverlayMenu({ isOpen, onClose }) {
@@ -21,7 +21,7 @@ export default function OverlayMenu({ isOpen, onClose }) {
   return (
     <AnimatePresence>
       {isOpen && (
-        <motion.div
+        <Motion.div
           className="fixed inset-0 flex items-center justify-center z-50"
           initial={{ clipPath: `circle(0% at ${origins})` }}
           animate={{ clipPath: `circle(150% at ${origins})` }}
@@ -42,11 +42,11 @@ export default function OverlayMenu({ isOpen, onClose }) {
               "Home",
               "About",
               "Skills",
-               "Projects",
-              "Experiences", 
+              "Projects",
+              "Experiences",
               "Contact",
             ].map((item, index) => (
-              <motion.li
+              <Motion.li
                 key={item}
                 className="text-2xl font-bold text-white"
                 initial={{ opacity: 0, y: 20 }}
@@ -60,10 +60,10 @@ export default function OverlayMenu({ isOpen, onClose }) {
                 >
                   {item}
                 </a>
-              </motion.li>
+              </Motion.li>
             ))}
           </ul>
-        </motion.div>
+        </Motion.div>
       )}
     </AnimatePresence>
   );

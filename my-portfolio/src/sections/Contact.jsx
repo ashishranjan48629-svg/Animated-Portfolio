@@ -8,15 +8,10 @@ const SERVICE_ID = import.meta.env.VITE_SERVICE_ID;
 const TEMPLATE_ID = import.meta.env.VITE_TEMPLATE_ID;
 const PUBLIC_KEY = import.meta.env.VITE_PUBLIC_KEY;
 
-const Contact = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    service: "",
-    budget: "",
-    idea: "",
-  });
+const EMPTY_FORM = { name: "", email: "", service: "", budget: "", idea: "" };
 
+const Contact = () => {
+  const [formData, setFormData] = useState(EMPTY_FORM);
   const [error, setError] = useState({});
   const [state, setState] = useState("");
 
@@ -60,7 +55,7 @@ const Contact = () => {
       service: formData.service,
       budget: formData.budget,
       message: formData.idea,
-      to_name: "Admin", // optional, use if your template has {{to_name}}
+      to_name: "Admin",
       reply_to: formData.email,
     };
 
@@ -73,7 +68,7 @@ const Contact = () => {
       );
       console.log("Success:", result);
       setState("Message sent successfully!");
-      setFormData({ name: "", email: "", service: "", budget: "", idea: "" });
+      setFormData(EMPTY_FORM);
     } catch (err) {
       console.error("EmailJS Error:", err);
       setState(`Failed: ${err?.text || err?.message || JSON.stringify(err)}`);
@@ -86,7 +81,7 @@ const Contact = () => {
   return (
     <section
       id="contact"
-      className="min-h-screen w-full flex items-center justify-center relative bg-black text-white overflow-hidden px-6 md:px-20"
+      className="min-h-screen w-full flex items-center justify-center relative bg-black text-white overflow-hidden px-4 sm:px-6 md:px-12 py-24"
     >
       <ParticleBackground />
 
@@ -100,20 +95,24 @@ const Contact = () => {
         ))}
       </div>
 
-      <div className="relative z-10 w-full max-w-7xl flex flex-col md:flex-row items-center justify-between gap-10">
-        {/* LEFT IMAGE */}
-        <motion.img
-          src={astra}
-          alt="Contact"
-          className="w-80 md:w-[520px] object-contain"
-          animate={{ y: [0, -12, 0] }}
-          transition={{ duration: 3, repeat: Infinity }}
-        />
+      {/* Stacks (image on top, form below) until lg, then side by side */}
+      <div className="relative z-10 w-full max-w-7xl flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-12">
+        {/* IMAGE: always visible, scales with screen size */}
+        <div className="w-full lg:w-1/2 flex justify-center shrink-0">
+          {React.createElement(motion.img, {
+            src: astra,
+            alt: "Contact",
+            className:
+              "block w-full max-w-[220px] sm:max-w-xs md:max-w-sm lg:max-w-md xl:max-w-[520px] h-auto object-contain",
+            animate: { y: [0, -12, 0] },
+            transition: { duration: 3, repeat: Infinity },
+          })}
+        </div>
 
-        {/* RIGHT FORM */}
+        {/* FORM */}
         <form
           onSubmit={handleSubmit}
-          className="w-full md:w-[52%] bg-black/80 border border-gray-800 rounded-2xl p-8 space-y-5"
+          className="w-full lg:w-1/2 bg-black/80 border border-gray-800 rounded-2xl p-5 sm:p-8 space-y-5"
         >
           <h2 className="text-2xl font-bold mb-2">Let's Work Together</h2>
 
@@ -183,6 +182,7 @@ const Contact = () => {
               value={formData.budget}
               onChange={handleChange}
               placeholder="Your Budget"
+              inputMode="decimal"
               className={inputClass}
             />
             {error.budget && (

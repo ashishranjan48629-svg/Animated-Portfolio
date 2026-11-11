@@ -1,12 +1,11 @@
-import React from "react";
 import ParticlesBackground from "../components/ParticlesBackground";
 import { FaGithub, FaLinkedin, FaEnvelope } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 
 const Footer = () => {
- const Glow = [
-  "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] opacity-30 blur-[120px]",
-];
+  const Glow = [
+    "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] opacity-30 blur-[120px]",
+  ];
   return (
     <footer
       id="footer"

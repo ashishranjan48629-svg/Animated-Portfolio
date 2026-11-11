@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import ParticleBackground from "../components/ParticlesBackground";
 
 const experiences = [
@@ -146,7 +146,7 @@ const Card = ({ exp, index }) => {
       </p>
 
       {/* Skill tags */}
-      <div className="flex flex-wrap gap-2 pt-4 border-t border-white/[0.06/]">
+      <div className="flex flex-wrap gap-2 pt-4 border-t border-white/[0.06]">
         {exp.skills.map((skill) => (
           <span
             key={skill}
@@ -183,16 +183,9 @@ const Experiences = () => {
 
   return (
     <section
-      id="Experience"
+      id="experiences"
       className="min-h-screen w-full relative bg-black text-white overflow-hidden"
     >
-      <style>{`
-        @keyframes twinkle {
-          from { opacity: 0.1; transform: scale(0.8); }
-          to   { opacity: 0.7; transform: scale(1.2); }
-        }
-      `}</style>
-
       <ParticleBackground />
       {/* Glow Effects */}
       <div className="absolute inset-0 pointer-events-none">

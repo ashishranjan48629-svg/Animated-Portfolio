@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { FiX } from "react-icons/fi";
 
 export default function OverlayMenu({ isOpen, onClose }) {
+  void motion;
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {

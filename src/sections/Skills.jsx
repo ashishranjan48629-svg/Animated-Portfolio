@@ -1,4 +1,3 @@
-import React from "react";
 import ParticleBackground from "../components/ParticlesBackground";
 import { FaReact, FaNodeJs, FaDocker, FaJava } from "react-icons/fa";
 import {
@@ -84,21 +83,6 @@ export default function SkillsMarqueeFade() {
         </div>
       </div>
 
-      {/* Marquee Animation */}
-      <style jsx>{`
-        @keyframes marquee {
-          0% {
-            transform: translateX(0%);
-          }
-          100% {
-            transform: translateX(-50%);
-          }
-        }
-        .animate-marquee {
-          display: flex;
-          animation: marquee 25s linear infinite;
-        }
-      `}</style>
     </section>
   );
 }

@@ -1,5 +1,4 @@
-import React from "react";
-import { motion } from "framer-motion";
+import { motion as Motion } from "framer-motion";
 import ParticlesBackground from "../components/ParticlesBackground";
 import profile from "../assets/profile.png";
 
@@ -32,16 +31,16 @@ export default function About() {
         {/* Profile Section */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
           {/* Image */}
-          <motion.img
+          <Motion.img
             src={profile}
-            alt="profile"
+            alt="Ashish Ranjan"
             className="w-70 h-70 rounded-2xl object-cover mx-auto"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
           />
 
           {/* Content */}
-          <motion.div
+          <Motion.div
             initial={{ opacity: 0, x: 40 }}
             whileInView={{ opacity: 1, x: 0 }}
           >
@@ -52,7 +51,7 @@ export default function About() {
             <p className="text-gray-400 mb-4">Full Stack Developer</p>
 
             {/* Paragraph Card */}
-            <motion.div
+            <Motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
@@ -66,7 +65,7 @@ export default function About() {
                 spans Java, React, Next.js, TypeScript, Tailwind CSS, and
                 RESTful APIs.
               </p>
-            </motion.div>
+            </Motion.div>
 
             {/* Info Cards */}
             <div className="flex flex-wrap gap-4 mb-6">
@@ -101,12 +100,12 @@ export default function About() {
                 Get in Touch
               </a>
             </div>
-          </motion.div>
+          </Motion.div>
         </div>
 
         {/* About Me Card */}
         <div className="mt-16 max-w-3xl">
-          <motion.div
+          <Motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
@@ -125,7 +124,7 @@ export default function About() {
               I love turning ideas into scalable, user-friendly products that
               make an impact.
             </p>
-          </motion.div>
+          </Motion.div>
         </div>
       </div>
     </section>

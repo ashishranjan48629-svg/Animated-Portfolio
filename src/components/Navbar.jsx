@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import OverlayMenu from "./OverlayMenu";
 import Logo from "../assets/logo.png";
 import { FiMenu } from "react-icons/fi";
@@ -10,9 +10,8 @@ export default function Navbar() {
 
   const lastScrollY = useRef(0);
 
-  // 👇 Observe Home section
   useEffect(() => {
-    const homeSection = document.getElementById("Home");
+    const homeSection = document.getElementById("home");
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -33,33 +32,21 @@ export default function Navbar() {
     };
   }, []);
 
-  // 👇 Scroll behavior
-useEffect(() => {
-  const handleScroll = () => {
-    if (forceVisible) {
-      setVisible(true);
-      return;
-    }
+  useEffect(() => {
+    const handleScroll = () => {
+      if (forceVisible) {
+        setVisible(true);
+        return;
+      }
 
-    const currentScrollY = window.scrollY;
+      const currentScrollY = window.scrollY;
+      setVisible(currentScrollY <= lastScrollY.current);
+      lastScrollY.current = currentScrollY;
+    };
 
-    if (currentScrollY > lastScrollY.current) {
-      setVisible(false); // hide when scrolling down
-    } else {
-      setVisible(true); // show when scrolling up
-    }
-
-    lastScrollY.current = currentScrollY;
-  };
-
-  window.addEventListener("scroll", handleScroll, { passive: true });
-
-  return () => {
-    window.removeEventListener("scroll", handleScroll);
-  };
-}, [forceVisible]);
-
-
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [forceVisible]);
   return (
     <>
       <nav
