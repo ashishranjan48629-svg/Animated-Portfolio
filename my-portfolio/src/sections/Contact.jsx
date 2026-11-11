@@ -1,102 +1,54 @@
 import React, { useState } from "react";
+import { motion } from "framer-motion";
 import ParticleBackground from "../components/ParticlesBackground";
 import emailjs from "@emailjs/browser";
-
-/* -------------------------------------------------------------------------- */
-/* Config                                                                     */
-/* -------------------------------------------------------------------------- */
+import astra from "../assets/astra.png";
 
 const SERVICE_ID = import.meta.env.VITE_SERVICE_ID;
 const TEMPLATE_ID = import.meta.env.VITE_TEMPLATE_ID;
 const PUBLIC_KEY = import.meta.env.VITE_PUBLIC_KEY;
 
-const SENDING = "Sending...";
-const SUCCESS = "Message sent successfully!";
-
 const EMPTY_FORM = { name: "", email: "", service: "", budget: "", idea: "" };
 
-const SERVICES = ["Web Development", "App Development", "UI/UX Design"];
-
-const GLOWS = [
-  "-top-10 -left-10 w-[360px] h-[360px] blur-[80px]",
-  "-bottom-10 -right-20 w-[360px] h-[360px] blur-[120px]",
-  "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200px] h-[200px] blur-[100px]",
-];
-
-const inputClass =
-  "w-full px-4 py-3 rounded-lg bg-[#1a1a1a] border border-gray-700 focus:border-blue-500 outline-none text-white placeholder-gray-500 text-sm transition-colors";
-
-/* -------------------------------------------------------------------------- */
-/* Small components                                                           */
-/* -------------------------------------------------------------------------- */
-
-function GlowEffects() {
-  return (
-    <div className="absolute inset-0 pointer-events-none">
-      {GLOWS.map((classes) => (
-        <div
-          key={classes}
-          className={`absolute rounded-full opacity-20 animate-pulse bg-linear-to-r from-[#6366f1] via-[#3b82f6] to-[#0ea5e9] ${classes}`}
-        />
-      ))}
-    </div>
-  );
-}
-
-function Field({ label, error, children }) {
-  return (
-    <div>
-      <label className="block text-sm font-medium mb-1">
-        {label} <span className="text-red-500">*</span>
-      </label>
-      {children}
-      {error && <p className="text-red-400 text-xs mt-1">{error}</p>}
-    </div>
-  );
-}
-
-/* -------------------------------------------------------------------------- */
-/* Section                                                                    */
-/* -------------------------------------------------------------------------- */
-
-export default function Contact() {
+const Contact = () => {
   const [formData, setFormData] = useState(EMPTY_FORM);
-  const [errors, setErrors] = useState({});
-  const [status, setStatus] = useState("");
+  const [error, setError] = useState({});
+  const [state, setState] = useState("");
 
-  const isSending = status === SENDING;
+  const Glow = [
+    "-top-10 -left-10 w-[360px] h-[360px] opacity-20 blur-[80px]",
+    "-bottom-10 -right-20 w-[360px] h-[360px] opacity-20 blur-[120px]",
+    "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200px] h-[200px] opacity-20 blur-[100px]",
+  ];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    // Budget accepts numbers only
     if (name === "budget" && value && !/^\d*\.?\d*$/.test(value)) return;
-
     setFormData((prev) => ({ ...prev, [name]: value }));
-    if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: "" }));
+    if (error[name]) {
+      setError((prev) => ({ ...prev, [name]: "" }));
     }
   };
 
-  // Returns true when the form is valid
-  const validate = () => {
+  const validateForm = () => {
+    const requiredFields = ["name", "email", "service", "budget", "idea"];
     const newErrors = {};
-    Object.keys(EMPTY_FORM).forEach((field) => {
-      if (!formData[field].trim()) {
+    requiredFields.forEach((field) => {
+      if (!formData[field]?.trim()) {
         newErrors[field] = "This field is required.";
       }
     });
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    setError(newErrors);
+    return Object.keys(newErrors).length > 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!validate()) return;
+    if (validateForm()) return;
 
-    setStatus(SENDING);
+    setState("Sending...");
 
-    // Keys must EXACTLY match your EmailJS template variables
+    // These keys must EXACTLY match your EmailJS template variables
     const templateParams = {
       from_name: formData.name,
       from_email: formData.email,
@@ -108,14 +60,23 @@ export default function Contact() {
     };
 
     try {
-      await emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams, PUBLIC_KEY);
-      setStatus(SUCCESS);
+      const result = await emailjs.send(
+        SERVICE_ID,
+        TEMPLATE_ID,
+        templateParams,
+        PUBLIC_KEY,
+      );
+      console.log("Success:", result);
+      setState("Message sent successfully!");
       setFormData(EMPTY_FORM);
     } catch (err) {
       console.error("EmailJS Error:", err);
-      setStatus(`Failed: ${err?.text || err?.message || "Please try again."}`);
+      setState(`Failed: ${err?.text || err?.message || JSON.stringify(err)}`);
     }
   };
+
+  const inputClass =
+    "w-full px-4 py-3 rounded-lg bg-[#1a1a1a] border border-gray-700 focus:border-blue-500 outline-none text-white placeholder-gray-500 text-sm transition-colors";
 
   return (
     <section
@@ -123,92 +84,149 @@ export default function Contact() {
       className="min-h-screen w-full flex items-center justify-center relative bg-black text-white overflow-hidden px-4 sm:px-6 md:px-12 py-24"
     >
       <ParticleBackground />
-      <GlowEffects />
 
-      <form
-        onSubmit={handleSubmit}
-        noValidate
-        className="relative z-10 w-full max-w-xl bg-black/80 border border-gray-800 rounded-2xl p-5 sm:p-8 space-y-5"
-      >
-        <h2 className="text-2xl font-bold mb-2">Let's Work Together</h2>
-
-        <Field label="Your Name" error={errors.name}>
-          <input
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            placeholder="Your Name"
-            className={inputClass}
+      {/* Glow Effects */}
+      <div className="absolute inset-0 pointer-events-none">
+        {Glow.map((glow, index) => (
+          <div
+            key={index}
+            className={`absolute rounded-full bg-linear-to-r from-[#6366f1] via-[#3b82f6] to-[#0ea5e9] animate-pulse ${glow}`}
           />
-        </Field>
+        ))}
+      </div>
 
-        <Field label="Your Email" error={errors.email}>
-          <input
-            name="email"
-            type="email"
-            value={formData.email}
-            onChange={handleChange}
-            placeholder="Your Email"
-            className={inputClass}
-          />
-        </Field>
+      {/* Stacks (image on top, form below) until lg, then side by side */}
+      <div className="relative z-10 w-full max-w-7xl flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-12">
+        {/* IMAGE: always visible, scales with screen size */}
+        <div className="w-full lg:w-1/2 flex justify-center shrink-0">
+          {React.createElement(motion.img, {
+            src: astra,
+            alt: "Contact",
+            className:
+              "block w-full max-w-[220px] sm:max-w-xs md:max-w-sm lg:max-w-md xl:max-w-[520px] h-auto object-contain",
+            animate: { y: [0, -12, 0] },
+            transition: { duration: 3, repeat: Infinity },
+          })}
+        </div>
 
-        <Field label="Service Needed" error={errors.service}>
-          <select
-            name="service"
-            value={formData.service}
-            onChange={handleChange}
-            className={inputClass}
-          >
-            <option value="">Select a service</option>
-            {SERVICES.map((service) => (
-              <option key={service} value={service}>
-                {service}
-              </option>
-            ))}
-          </select>
-        </Field>
-
-        <Field label="Your Budget" error={errors.budget}>
-          <input
-            name="budget"
-            value={formData.budget}
-            onChange={handleChange}
-            placeholder="Your Budget"
-            inputMode="decimal"
-            className={inputClass}
-          />
-        </Field>
-
-        <Field label="Explain Your Idea" error={errors.idea}>
-          <textarea
-            name="idea"
-            value={formData.idea}
-            onChange={handleChange}
-            rows={5}
-            placeholder="Explain your idea..."
-            className={inputClass}
-          />
-        </Field>
-
-        <button
-          type="submit"
-          disabled={isSending}
-          className="w-full py-3 rounded-lg bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition font-semibold text-sm tracking-wide"
+        {/* FORM */}
+        <form
+          onSubmit={handleSubmit}
+          className="w-full lg:w-1/2 bg-black/80 border border-gray-800 rounded-2xl p-5 sm:p-8 space-y-5"
         >
-          {isSending ? SENDING : "Send Message"}
-        </button>
+          <h2 className="text-2xl font-bold mb-2">Let's Work Together</h2>
 
-        {status && !isSending && (
-          <p
-            className={`text-center text-sm ${
-              status === SUCCESS ? "text-green-400" : "text-red-400"
-            }`}
+          {/* Name */}
+          <div>
+            <label className="block text-sm font-medium mb-1">
+              Your Name <span className="text-red-500">*</span>
+            </label>
+            <input
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              placeholder="Your Name"
+              className={inputClass}
+            />
+            {error.name && (
+              <p className="text-red-400 text-xs mt-1">{error.name}</p>
+            )}
+          </div>
+
+          {/* Email */}
+          <div>
+            <label className="block text-sm font-medium mb-1">
+              Your Email <span className="text-red-500">*</span>
+            </label>
+            <input
+              name="email"
+              type="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="Your Email"
+              className={inputClass}
+            />
+            {error.email && (
+              <p className="text-red-400 text-xs mt-1">{error.email}</p>
+            )}
+          </div>
+
+          {/* Service */}
+          <div>
+            <label className="block text-sm font-medium mb-1">
+              Service Needed <span className="text-red-500">*</span>
+            </label>
+            <select
+              name="service"
+              value={formData.service}
+              onChange={handleChange}
+              className={inputClass}
+            >
+              <option value="">Select a service</option>
+              <option value="Web Development">Web Development</option>
+              <option value="App Development">App Development</option>
+              <option value="UI/UX Design">UI/UX Design</option>
+            </select>
+            {error.service && (
+              <p className="text-red-400 text-xs mt-1">{error.service}</p>
+            )}
+          </div>
+
+          {/* Budget */}
+          <div>
+            <label className="block text-sm font-medium mb-1">
+              Your Budget <span className="text-red-500">*</span>
+            </label>
+            <input
+              name="budget"
+              value={formData.budget}
+              onChange={handleChange}
+              placeholder="Your Budget"
+              inputMode="decimal"
+              className={inputClass}
+            />
+            {error.budget && (
+              <p className="text-red-400 text-xs mt-1">{error.budget}</p>
+            )}
+          </div>
+
+          {/* Idea */}
+          <div>
+            <label className="block text-sm font-medium mb-1">
+              Explain Your Idea <span className="text-red-500">*</span>
+            </label>
+            <textarea
+              name="idea"
+              value={formData.idea}
+              onChange={handleChange}
+              rows="5"
+              placeholder="Explain your idea..."
+              className={inputClass}
+            />
+            {error.idea && (
+              <p className="text-red-400 text-xs mt-1">{error.idea}</p>
+            )}
+          </div>
+
+          <button
+            type="submit"
+            disabled={state === "Sending..."}
+            className="w-full py-3 rounded-lg bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition font-semibold text-sm tracking-wide"
           >
-            {status}
-          </p>
-        )}
-      </form>
+            {state === "Sending..." ? "Sending..." : "Send Message"}
+          </button>
+
+          {state && state !== "Sending..." && (
+            <p
+              className={`text-center text-sm ${state.includes("successfully") ? "text-green-400" : "text-red-400"}`}
+            >
+              {state}
+            </p>
+          )}
+        </form>
+      </div>
     </section>
   );
-}
+};
+
+export default Contact;
